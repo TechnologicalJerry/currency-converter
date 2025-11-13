@@ -1,0 +1,39 @@
+{
+  "name": "currency-converter",
+  "version": "1.0.0",
+  "description": "Backend for login, signup, forgot password, and currency converter application using Express, TypeScript, and MongoDB.",
+  "keywords": [
+    "\"express",
+    "typescript",
+    "mongodb",
+    "login",
+    "signup",
+    "authentication",
+    "forgot-password",
+    "currency-converter",
+    "nodejs",
+    "rest-api",
+    "backend",
+    "jwt",
+    "bcrypt",
+    "dotenv",
+    "morgan",
+    "cors",
+    "helmet\""
+  ],
+  "homepage": "https://github.com/TechnologicalJerry/currency-converter#readme",
+  "bugs": {
+    "url": "https://github.com/TechnologicalJerry/currency-converter/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TechnologicalJerry/currency-converter.git"
+  },
+  "license": "MIT",
+  "author": "technojerry",
+  "type": "commonjs",
+  "main": "server.ts",
+  "scripts": {
+    "test": "jest"
+  }
+}
