@@ -35,5 +35,8 @@
   "main": "server.ts",
   "scripts": {
     "test": "jest"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }
