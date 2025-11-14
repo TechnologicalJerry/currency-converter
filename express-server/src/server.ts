@@ -3,28 +3,56 @@ import 'dotenv/config';
 import http from 'node:http';
 
 import app from './app.js';
+import { connectDatabase, disconnectDatabase } from './configs/database.js';
 
 const PORT = Number.parseInt(process.env.PORT ?? '5000', 10);
 
-const server = http.createServer(app);
+let server: http.Server | undefined;
 
-server.listen(PORT, () => {
-  const env = process.env.NODE_ENV ?? 'development';
-  // eslint-disable-next-line no-console
-  console.log(`🚀 Server listening on port ${PORT} (${env})`);
-});
+const startServer = async () => {
+  try {
+    await connectDatabase();
+
+    server = http.createServer(app);
+    server.listen(PORT, () => {
+      const env = process.env.NODE_ENV ?? 'development';
+      // eslint-disable-next-line no-console
+      console.log(`🚀 Server listening on port ${PORT} (${env})`);
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Unable to start server', error);
+    process.exit(1);
+  }
+};
+
+void startServer();
 
 const gracefulShutdown = (signal: NodeJS.Signals) => {
   // eslint-disable-next-line no-console
   console.log(`Received ${signal}. Closing HTTP server…`);
-  server.close((error) => {
-    if (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error during server shutdown', error);
-      process.exitCode = 1;
+  const closeServer = async () => {
+    if (!server) {
+      return;
     }
-    process.exit();
-  });
+
+    await new Promise<void>((resolve) => {
+      server?.close((closeError) => {
+        if (closeError) {
+          // eslint-disable-next-line no-console
+          console.error('Error during server shutdown', closeError);
+          process.exitCode = 1;
+        }
+        resolve();
+      });
+    });
+  };
+
+  void closeServer()
+    .then(() => disconnectDatabase())
+    .finally(() => {
+      process.exit();
+    });
 };
 
 process.on('SIGINT', gracefulShutdown);
